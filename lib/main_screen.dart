@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'detail_screen.dart';
 import 'login_screen.dart';
 import 'convert_money.dart';
 import 'convert_time.dart';
@@ -199,6 +200,133 @@ class _MainScreenState extends State<MainScreen> {
                     itemCount: _filteredNewsArticles.length,
                     itemBuilder: (context, index) {
                       final article = _filteredNewsArticles[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailScreen(article: article),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  article['title'],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  article['description'] ??
+                                      'No description available',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      article['source']['name'],
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        _bookmarks[index]
+                                            ? Icons.bookmark
+                                            : Icons.bookmark_border,
+                                        color: Colors.blue,
+                                      ),
+                                      onPressed: () => _toggleBookmark(index),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.black), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.money, color: Colors.black), label: 'Money'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.access_time, color: Colors.black),
+              label: 'Time'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: Colors.black), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.feedback, color: Colors.black),
+              label: 'Feedback'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.logout, color: Colors.black), label: 'Logout'),
+        ],
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.black,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        onTap: _onBottomNavigationBarItemTapped,
+      ),
+    );
+  }
+
+  /*
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Welcome, ${widget.username}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark, color: Colors.white),
+            onPressed: _navigateToBookmarks,
+          ),
+        ],
+        backgroundColor: Colors.blue,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search...',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: _filteredNewsArticles.length,
+                    itemBuilder: (context, index) {
+                      final article = _filteredNewsArticles[index];
                       return Card(
                         margin: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
@@ -287,4 +415,5 @@ class _MainScreenState extends State<MainScreen> {
     _searchController.dispose();
     super.dispose();
   }
+  */
 }
